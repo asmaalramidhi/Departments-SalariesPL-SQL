@@ -1,0 +1,106 @@
+SQL> CREATE TABLE DeptSalary (
+  2      DeptID NUMBER PRIMARY KEY,
+  3      DeptName VARCHAR2(50),
+  4      NumEmployees NUMBER,
+  5      TotalSalary NUMBER
+  6  );
+
+Table created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> INSERT INTO DeptSalary VALUES (1, 'HR', 5, 15000);
+
+1 row created.
+
+SQL> INSERT INTO DeptSalary VALUES (2, 'Finance', 8, 24000);
+
+1 row created.
+
+SQL> INSERT INTO DeptSalary VALUES (3, 'IT', 10, 30000);
+
+1 row created.
+
+SQL> INSERT INTO DeptSalary VALUES (4, 'Marketing', 6, 18000);
+
+1 row created.
+
+SQL> INSERT INTO DeptSalary VALUES (5, 'Logistics', 9, 27000);
+
+1 row created.
+
+SQL> COMMIT;
+
+Commit complete.
+
+SQL> DECLARE
+  2      CURSOR c IS SELECT NumEmployees, TotalSalary FROM DeptSalary;
+  3      x NUMBER := 0;
+  4      y NUMBER := 0;
+  5      xy NUMBER := 0;
+  6      x2 NUMBER := 0;
+  7      n NUMBER := 0;
+  8
+  9      a NUMBER;  -- Slope (A) --
+ 10      b NUMBER;  -- Intercept (B) --
+ 11      avg_salary NUMBER;
+ 12  BEGIN
+ 13      FOR rec IN c LOOP
+ 14          x := x + rec.NumEmployees;
+ 15          y := y + rec.TotalSalary;
+ 16          xy := xy + (rec.NumEmployees * rec.TotalSalary);
+ 17          x2 := x2 + POWER(rec.NumEmployees, 2);
+ 18          n := n + 1;
+ 19      END LOOP;
+ 20
+ 21      -- Calculate the slope A and intercept B in the equation Y = A*X + B --
+ 22      a := (n * xy - x * y) / (n * x2 - POWER(x, 2));
+ 23      b := (y - a * x) / n;
+ 24
+ 25      DBMS_OUTPUT.PUT_LINE('Linear Equation: Y = ' || ROUND(a,2) || ' * X + ' || ROUND(b,2));
+ 26
+ 27      -- Display average salaries per department --
+ 28      FOR rec IN (SELECT DeptName, ROUND(TotalSalary / NumEmployees, 2) AS AvgSalary FROM DeptSalary) LOOP
+ 29          DBMS_OUTPUT.PUT_LINE('Department: ' || rec.DeptName || ' - Average Salary: ' || rec.AvgSalary);
+ 30      END LOOP;
+ 31  END;
+ 32  /
+
+PL/SQL procedure successfully completed.
+SQL> COLUMN Department FORMAT A15
+SQL> COLUMN "Number of Employees" FORMAT 999
+SQL> COLUMN "Total Salary" FORMAT 999999
+SQL> COLUMN "Average Salary" FORMAT 9999
+SQL>
+ SELECT
+      DeptName AS "Department",
+        NumEmployees AS "Number of Employees",
+       TotalSalary AS "Total Salary",
+        FLOOR(TotalSalary / NumEmployees) AS "Average Salary"
+    FROM
+       DeptSalary;
+
+Department      Number of Employees Total Salary Average Salary
+--------------- ------------------- ------------ --------------
+HR                                5        15000           3000
+Finance                           8        24000           3000
+IT                               10        30000           3000
+Marketing                         6        18000           3000
+Logistics                         9        27000           3000
+
+
+COLUMN "Department" FORMAT A15
+COLUMN "Number of Employees" FORMAT 9999
+COLUMN "Total Salary" FORMAT 99999
+COLUMN "Average Salary" FORMAT 9999
+
+
+SELECT
+   DeptName AS "Department",
+   NumEmployees AS "Number of Employees",
+   TotalSalary AS "Total Salary",
+   FLOOR(TotalSalary / NumEmployees) AS "Average Salary"
+FROM
+   DeptSalary;

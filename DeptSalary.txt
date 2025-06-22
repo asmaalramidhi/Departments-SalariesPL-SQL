@@ -1,4 +1,8 @@
-A table containing departments, each department has for example 10 employees or 5,etc. and each department has a salary corresponding to it and the salary is the total salary for each department. Calculate the linear relationship between them y = ax + b and add the Quary SQL function so that it calculates the average salaries of the employees in each department?
+A table containing departments, each department has for example 10 employees or 5,
+etc. and each department has a salary corresponding to it and the salary is the total
+salary for each department. Calculate the linear relationship between them y = ax + b
+and add the Quary SQL function so that it calculates the average salaries of the
+employees in each department?
 
 SQL> CREATE TABLE DeptSalary (
   2      DeptID NUMBER PRIMARY KEY,
